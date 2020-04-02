@@ -9,16 +9,14 @@ import java.util.ArrayList;
 
 public class Dinamica {
     public static void main(String[] args) {
-        double gamma = 3.40;
-        RungeKuttaMethod.Params params = new RungeKuttaMethod(). new Params(0.01, 0.2, gamma, 0.08, 0.01);
+        double gamma = 3.7;
+        RungeKuttaMethod.Params params = new RungeKuttaMethod(). new Params(0.001, 0.2, gamma, 0.08, 0.01);
         Point2D.Double current = Model.getModelPoint(gamma);
         ArrayList<Point2D.Double> result = new ArrayList<>();
-        for (int i = 0; i < 5000000; i++) {
-            if (i % 1000 == 0) {
-                result.add(current);
-            }
-                current = RungeKuttaMethod.getNewPointWithNoise(current, params);
-
+        for (int i = 0; i < 500000; i++) {
+            current = RungeKuttaMethod.getNewPointWithNoise(current, params);
+            Point2D.Double current2 = new Point2D.Double(0.001*i, current.x);
+            result.add(current);
         }
         Writer.write(result, "out.txt");
     }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Ellipse {
     public static void main(String[] args) {
-        double gamma = 3.40;
+        double gamma = 3.7;
         double x = Model.getX(gamma);
         double y = Model.getY(x);
         System.out.println(x);
@@ -26,13 +26,6 @@ public class Ellipse {
         double w3 = (-sq(c) * d * sq(x) - a * b * c * sq(y)) / (d * denominator) - sq(y)/(2 * d);
         System.out.println("w1: " + w1 + " w2: " + w2 + " w3: " + w3);
 
-//        w1 = 0.00229432026383291;
-//        w2 = 0.00450567973616709;
-//        w3 = 0.0477406548568146;
-//
-//        x = 0.1;
-//        y = 1.4285714285714285;
-
         double discr = sq(w1 + w3) - 4 * (w1 * w3 - sq(w2));
         double lambda1 = (w1 + w3 - Math.sqrt(discr)) / 2;
         double lambda2 = (w1 + w3 + Math.sqrt(discr)) / 2;
@@ -48,23 +41,27 @@ public class Ellipse {
         double v22 = (lambda2 - w1) / v2Divisor;
         System.out.println("v21: " + v21 + " v22: " + v22);
 
-        double epsilon = 0.0001;
+        double epsilon = 0.035;
         double q = Math.sqrt(-Math.log(1 - 0.95));
 
         double z1NoAngle = epsilon * q * Math.sqrt(2 * lambda1);
         double z2NoAngle = epsilon * q * Math.sqrt(2 * lambda2);
         double delta_divisor = v11 * v22 - v12 * v21;
+        Point2D.Double firstDote = new Point2D.Double();
         ArrayList<Point2D.Double> result = new ArrayList<>();
         for (int i = 0; i < 360; i++) {
             double radians = Math.toRadians(i);
             double z1 = z1NoAngle * Math.cos(radians);
             double z2 = z2NoAngle * Math.sin(radians);
-            double eex = x + (z1 * v22 - z2 * v12) / delta_divisor;
-            double eey = y + (z2 * v11 - z1 * v21) / delta_divisor;
             result.add(new Point2D.Double(
                     x + (z1 * v22 - z2 * v12) / delta_divisor,
                     y + (z2 * v11 - z1 * v21) / delta_divisor));
+            if (i == 0) {
+                firstDote = new Point2D.Double(x + (z1 * v22 - z2 * v12) / delta_divisor,
+                        y + (z2 * v11 - z1 * v21) / delta_divisor);
+            }
         }
+        result.add(firstDote);
         Writer.write(result, "out.txt");
     }
 

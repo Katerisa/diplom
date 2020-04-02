@@ -13,8 +13,8 @@ public class Line {
         ArrayList<Point2D.Double> result = new ArrayList<>();
         int k = cycle.size();
         double gamma = 1;
-        double epsilon = 0.0003;
-        double q = 1.386;
+        double epsilon = 0.01;
+        double q = 1.821;
         for (int i = 0; i < k; i++) {
             double x = cycle.get(i).x;
             double y = cycle.get(i).y;

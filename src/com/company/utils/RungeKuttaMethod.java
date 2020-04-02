@@ -31,7 +31,7 @@ public class RungeKuttaMethod {
     public static Point2D.Double getNewPointWithNoise(Point2D.Double prev, RungeKuttaMethod.Params params) {
         double random1 = Math.random();
         double random2 = Math.random();
-        double epsilon = 0.0001;
+        double epsilon = 0.01;
         double r1 = Math.sqrt(-2 * Math.log(random1)) * Math.cos(2 * Math.PI * random2);
         double r2 = Math.sqrt(-2 * Math.log(random1)) * Math.sin(2 * Math.PI * random2);
 

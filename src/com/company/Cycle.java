@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Cycle {
     public static void main(String[] args) {
         double step = 0.001;
-        double epsilon = 0.00001;
+        double epsilon = 0.01;
         double gamma = 1;
         RungeKuttaMethod.Params params = new RungeKuttaMethod(). new Params(step, 0.2, gamma, 0.08, 0.01);
         Point2D.Double current = new Point2D.Double(1, 1);

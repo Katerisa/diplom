@@ -14,8 +14,8 @@ public class CycleWithNoise {
         ArrayList<Point2D.Double> result = new ArrayList<>();
         ArrayList<Point2D.Double> cycle = Reader.reader("cycle.txt");
         Point2D.Double current = cycle.get(0);
-        RungeKuttaMethod.Params params = new RungeKuttaMethod(). new Params(0.01, 0.2, gamma, 0.08, 0.01);
-        for (int j = 0; j < 150000; j++) {
+        RungeKuttaMethod.Params params = new RungeKuttaMethod(). new Params(0.001, 0.2, gamma, 0.08, 0.01);
+        for (int j = 0; j < 500000; j++) {
             result.add(current);
             current = RungeKuttaMethod.getNewPointWithNoise(current, params);
         }
