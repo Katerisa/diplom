@@ -1,43 +1,59 @@
 package com.company;
 
 import com.company.utils.Reader;
+import com.company.utils.RungeKuttaMethod;
 import com.company.utils.Writer;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.company.utils.Model.getModelX;
+import static com.company.utils.Model.getModelY;
+import static com.company.utils.myMath.pythagoras;
+import static com.company.utils.myMath.sq;
 
 public class FTS {
     public static void main(String[] args) {
         ArrayList<Point2D.Double> cycle = Reader.reader("cycle.txt");
-        ArrayList<Point2D.Double> result = new ArrayList<>();
         double step = 0.001;
+        double gamma = 2;
+        RungeKuttaMethod.Params params = new RungeKuttaMethod(). new Params(step, 0.2, gamma, 0.08, 0.01);
+        Writer.write(plot(step, params, cycle), "fts.txt");
+    }
+
+    static ArrayList<Point2D.Double> plot(double step, RungeKuttaMethod.Params params, ArrayList<Point2D.Double> cycle) {
+        ArrayList<Point2D.Double> result = new ArrayList<>();
         int k = cycle.size();
-        double gamma = 1;
         ArrayList<Double> r = new ArrayList<>();
         r.add(1.0);
         ArrayList<Double> h = new ArrayList<>();
         h.add(0.0);
-        ArrayList<Double> aList = new ArrayList<>();
-        ArrayList<Double> b = new ArrayList<>();
         for (int i = 1; i < k; i++) {
             double x = cycle.get(i).x;
             double y = cycle.get(i).y;
-            double f = x * (1 - x) - gamma * x * y / (x + 0.08);
-            double g = 0.2 * y * (1 - y / (x + 0.01));
-            double fx = 1 - 2 * x - 0.08 * gamma * y / Math.pow(x + 0.08, 2);
-            double fy = - gamma * x / (x + 0.08);
+            double f = getModelX(params, x, y);
+            double g = getModelY(params, x, y);
+            double fx = 1 - 2 * x - 0.08 * params.getGamma() * y / Math.pow(x + 0.08, 2);
+            double fy = - params.getGamma() * x / (x + 0.08);
             double gx = 0.2 * y * y / Math.pow(x + 0.01, 2);
             double gy = 0.2 - 0.4 * y / (x + 0.01);
-            Point2D.Double p = new Point2D.Double(-g / Math.sqrt(f*f + g*g), f / Math.sqrt(f*f + g*g));
-            aList.add(p.x * (p.x * 2 * fx + p.y * (gx + fy)) + p.y * (p.x * (fy + gx) + p.y * 2 * gy));
-            r.add(r.get(i-1) * Math.pow(Math.E, aList.get(i-1) * step));
-            b.add(p.x * p.x * x * x + p.y * p.y * y * y);
-            h.add(h.get(i-1) + b.get(i-1) / r.get(i) * step);
+            double divisor = pythagoras(f, g);
+            Point2D.Double p = new Point2D.Double(-g / divisor, f / divisor);
+            double a = p.x * (p.x * 2 * fx + p.y * (gx + fy)) +
+                    p.y * (p.y * 2 * gy + p.x * (gx + fy));
+            r.add(last(r) * Math.pow(Math.E, a * step));
+            double b = sq(p.x) * sq(x) + sq(p.y) * sq(y);
+            h.add(last(h) + b / last(r) * step);
         }
-        double C = r.get(k - 1) * h.get(k-1) / (1 - r.get(k-1));
+        double C = last(r) * last(h) / (1 - last(r));
         for (int i = 0; i < k; i++) {
             result.add(new Point2D.Double((i + 1) * step, r.get(i) * (C + h.get(i))));
         }
-        Writer.write(result, "fts.txt");
+        return result;
+    }
+
+    private static <E> E last(List<E> list) {
+        return list.get(list.size() - 1);
     }
 }

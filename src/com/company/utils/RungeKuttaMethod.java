@@ -28,19 +28,18 @@ public class RungeKuttaMethod {
         }
     }
 
-    public static Point2D.Double getNewPointWithNoise(Point2D.Double prev, RungeKuttaMethod.Params params) {
+    public static Point2D.Double getNewPointWithNoise(Point2D.Double prev, RungeKuttaMethod.Params params, double noise) {
         double random1 = Math.random();
         double random2 = Math.random();
-        double epsilon = 0.01;
         double r1 = Math.sqrt(-2 * Math.log(random1)) * Math.cos(2 * Math.PI * random2);
         double r2 = Math.sqrt(-2 * Math.log(random1)) * Math.sin(2 * Math.PI * random2);
 
         Point2D.Double newPoint = RungeKuttaMethod.getNewPoint(prev, params);
 
-        double x = newPoint.x + epsilon * Math.sqrt(params.step) * r1 * prev.x;
-        double y = newPoint.y + epsilon * Math.sqrt(params.step) * r2 * prev.y;
+        double x = newPoint.x + noise * Math.sqrt(params.step) * r1 * prev.x;
+        double y = newPoint.y + noise * Math.sqrt(params.step) * r2 * prev.y;
 
-        return new Point2D.Double(Math.max(x, x), Math.max(y, y));
+        return new Point2D.Double(x, y);
     }
 
     public static Point2D.Double getNewPoint(Point2D.Double prev, RungeKuttaMethod.Params params) {

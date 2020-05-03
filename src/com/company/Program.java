@@ -14,7 +14,7 @@ public class Program {
         ArrayList<Point2D.Double> result = new ArrayList<>();
         for (int i = 1; i < n+1; i++) {
             gamma = (i-1) * (5/n);
-            Point2D.Double current = new Point2D.Double(gamma, Model.getY(Model.getX(gamma)));
+            Point2D.Double current = new Point2D.Double(gamma, Model.getStationaryY(Model.getStationaryX(gamma)));
             result.add(current);
         }
         Writer.write(result, "out.txt");

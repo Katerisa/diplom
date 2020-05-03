@@ -6,11 +6,16 @@ import com.company.utils.Writer;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import static com.company.utils.myMath.pythagoras;
+import static com.company.utils.myMath.sq;
+
 public class Ellipse {
     public static void main(String[] args) {
         double gamma = 3.7;
-        double x = Model.getX(gamma);
-        double y = Model.getY(x);
+        double epsilon = 0.01;
+        double q = Math.sqrt(-Math.log(1 - 0.95));
+        double x = Model.getStationaryX(gamma);
+        double y = Model.getStationaryY(x);
         System.out.println(x);
         System.out.println(y);
         System.out.println(sq(x) + " " + sq(y));
@@ -31,18 +36,15 @@ public class Ellipse {
         double lambda2 = (w1 + w3 + Math.sqrt(discr)) / 2;
         System.out.println("lambda1: " + lambda1 + " lambda2: " + lambda2);
 
-        double v1Divisor = (Math.sqrt(sq(w2) + sq(lambda1 - w1)));
+        double v1Divisor = pythagoras(w2, lambda1 - w1);
         double v11 = w2 / v1Divisor;
         double v12 = (lambda1 - w1) / v1Divisor;
         System.out.println("v11: " + v11 + " v12: " + v12);
 
-        double v2Divisor = (Math.sqrt(sq(w2) + sq(lambda2 - w1)));
+        double v2Divisor = pythagoras(w2, lambda2 - w1);
         double v21 = w2 / v2Divisor;
         double v22 = (lambda2 - w1) / v2Divisor;
         System.out.println("v21: " + v21 + " v22: " + v22);
-
-        double epsilon = 0.035;
-        double q = Math.sqrt(-Math.log(1 - 0.95));
 
         double z1NoAngle = epsilon * q * Math.sqrt(2 * lambda1);
         double z2NoAngle = epsilon * q * Math.sqrt(2 * lambda2);
@@ -63,9 +65,5 @@ public class Ellipse {
         }
         result.add(firstDote);
         Writer.write(result, "out.txt");
-    }
-
-    private static double sq(double x) {
-        return Math.pow(x, 2);
     }
 }
